@@ -1,22 +1,37 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
+import { useAuth } from '../../features/auth/useAuth'
+import { ApiError } from '../../services/api'
 import * as S from './Register'
 
+/** Mesmo mínimo exigido pelo [MinLength(8)] do RegistrarRequest.cs. */
+const SENHA_MIN_LENGTH = 8
+
 export default function Register() {
-  const [name, setName] = useState('')
+  const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [senha, setSenha] = useState('')
+  const [confirmarSenha, setConfirmarSenha] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const { signUp } = useAuth()
+  const navigate = useNavigate()
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError('')
 
-    if (password !== confirmPassword) {
+    // Validações locais só para dar retorno rápido. A regra que vale é a
+    // do servidor (DataAnnotations), que roda de qualquer jeito.
+    if (senha.length < SENHA_MIN_LENGTH) {
+      setError(`A senha deve ter ao menos ${SENHA_MIN_LENGTH} caracteres.`)
+      return
+    }
+
+    if (senha !== confirmarSenha) {
       setError('As senhas não conferem.')
       return
     }
@@ -24,14 +39,15 @@ export default function Register() {
     setLoading(true)
 
     try {
-      // TODO: chamar a API ASP.NET Core, ex.:
-      // await api('/auth/register', {
-      //   method: 'POST',
-      //   body: JSON.stringify({ name, email, password }),
-      // })
-      console.log('register', { name, email, password })
-    } catch {
-      setError('Não foi possível criar a conta. Tente novamente.')
+      await signUp({ nome, email, senha })
+      navigate('/', { replace: true })
+    } catch (err) {
+      // 409 = email já cadastrado; 400 = validação do DTO.
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : 'Erro inesperado. Tente novamente.',
+      )
     } finally {
       setLoading(false)
     }
@@ -40,15 +56,16 @@ export default function Register() {
   return (
     <S.Container>
       <S.Card>
-        <S.Form onSubmit={handleSubmit}>
+        <S.Form onSubmit={handleSubmit} noValidate>
           <S.Field>
             <S.Input
               id="name"
+              name="name"
               type="text"
               autoComplete="name"
               placeholder="Nome"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
               required
             />
           </S.Field>
@@ -56,6 +73,7 @@ export default function Register() {
           <S.Field>
             <S.Input
               id="email"
+              name="email"
               type="email"
               autoComplete="email"
               placeholder="Email"
@@ -68,11 +86,12 @@ export default function Register() {
           <S.Field>
             <S.Input
               id="password"
+              name="password"
               type="password"
               autoComplete="new-password"
               placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
               required
             />
           </S.Field>
@@ -80,16 +99,17 @@ export default function Register() {
           <S.Field>
             <S.Input
               id="confirmPassword"
+              name="confirmPassword"
               type="password"
               autoComplete="new-password"
               placeholder="Confirmar senha"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={confirmarSenha}
+              onChange={(e) => setConfirmarSenha(e.target.value)}
               required
             />
           </S.Field>
 
-          {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
+          {error && <S.ErrorMessage role="alert">{error}</S.ErrorMessage>}
 
           <S.Button type="submit" disabled={loading}>
             {loading ? 'Criando conta...' : 'Criar conta'}
