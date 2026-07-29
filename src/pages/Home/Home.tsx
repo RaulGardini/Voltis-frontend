@@ -16,7 +16,7 @@ export default function Home() {
     <S.Container>
       <S.Card>
         <div>
-          <S.Greeting>Olá, {user?.nome}</S.Greeting>
+          <S.Greeting>Olá, {user?.nome}, como vai?</S.Greeting>
           <S.Email>{user?.email}</S.Email>
         </div>
 
