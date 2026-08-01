@@ -113,6 +113,10 @@ export function post<T>(path: string, payload: unknown): Promise<T> {
   return request<T>(path, { method: 'POST', body: JSON.stringify(payload) })
 }
 
+export function put<T>(path: string, payload: unknown): Promise<T> {
+  return request<T>(path, { method: 'PUT', body: JSON.stringify(payload) })
+}
+
 export function get<T>(path: string): Promise<T> {
   return request<T>(path, { method: 'GET' })
 }
