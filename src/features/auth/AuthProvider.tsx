@@ -12,7 +12,7 @@ import {
   saveSession,
 } from './auth.storage'
 import type { AuthResponse, LoginRequest, RegistrarRequest, User } from './auth.types'
-import { getTokenExpiration } from './jwt'
+import { getTokenExpiration, getUserId } from './jwt'
 
 interface SessionState {
   token: string
@@ -83,6 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AuthContextValue>(
     () => ({
       user: session?.user ?? null,
+      userId: session ? getUserId(session.token) : null,
       isAuthenticated: session !== null,
       signIn,
       signUp,
