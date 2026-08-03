@@ -16,7 +16,8 @@ export const Card = styled.div`
   max-width: 400px;
   padding: 32px 15px;
   text-align: center;
-  background: #708a8d6e;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 1.5rem;
 `
 
@@ -33,13 +34,13 @@ export const Email = styled.p`
 export const Button = styled.button`
   padding: 11px 12px;
   font-weight: 600;
-  color: #fff;
-  background: #a8a8a8a8;
+  color: ${({ theme }) => theme.colors.onPrimary};
+  background: ${({ theme }) => theme.colors.primary};
   border: none;
   border-radius: ${({ theme }) => theme.radii.md};
   cursor: pointer;
 
   &:hover {
-    background: #9e9e9e;
+    background: ${({ theme }) => theme.colors.primaryHover};
   }
 `
