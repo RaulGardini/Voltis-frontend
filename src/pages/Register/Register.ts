@@ -12,7 +12,8 @@ export const Card = styled.div`
   width: 100%;
   max-width: 400px;
   padding: 15px;
-  background: #708a8d6e;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 1.5rem;
 `
 
@@ -32,24 +33,32 @@ export const Field = styled.div`
 export const Input = styled.input`
   padding: 15px 12px;
   color: ${({ theme }) => theme.colors.text};
-  background: #a8a8a8a8;
-  border: none;
+  background: ${({ theme }) => theme.colors.field};
+  border: 1px solid transparent;
   border-radius: ${({ theme }) => theme.radii.md};
   outline: none;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.textMuted};
+  }
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
 `
 
 export const Button = styled.button`
   margin-top: 8px;
   padding: 11px 12px;
   font-weight: 600;
-  color: #fff;
-  background: #a8a8a8a8;
+  color: ${({ theme }) => theme.colors.onPrimary};
+  background: ${({ theme }) => theme.colors.primary};
   border: none;
   border-radius: ${({ theme }) => theme.radii.md};
   cursor: pointer;
 
   &:hover:not(:disabled) {
-    background: #9e9e9e;
+    background: ${({ theme }) => theme.colors.primaryHover};
   }
 
   &:disabled {
@@ -70,7 +79,8 @@ export const Footer = styled.p`
   color: ${({ theme }) => theme.colors.textMuted};
 
   a {
-    color: ${({ theme }) => theme.colors.primary};
-    font-weight: 500;
+    color: ${({ theme }) => theme.colors.text};
+    font-weight: 600;
+    text-decoration: underline;
   }
 `

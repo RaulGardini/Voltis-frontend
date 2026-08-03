@@ -14,15 +14,15 @@ export const GearButton = styled.button`
   justify-content: center;
   width: 42px;
   height: 42px;
-  color: #fff;
-  background: #708a8d6e;
+  color: ${({ theme }) => theme.colors.onPrimary};
+  background: ${({ theme }) => theme.colors.primary};
   border: none;
   border-radius: 50%;
   cursor: pointer;
   transition: background 0.15s, transform 0.2s;
 
   &:hover {
-    background: #708a8d9e;
+    background: ${({ theme }) => theme.colors.primaryHover};
   }
 
   /* A engrenagem gira ao abrir, deixando claro que o painel é dela. */
@@ -53,9 +53,10 @@ export const Popover = styled.div`
   right: 0;
   width: 260px;
   padding: 18px;
-  background: #708a8de6;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 1.5rem;
-  box-shadow: 0 12px 30px rgb(0 0 0 / 35%);
+  box-shadow: 0 12px 30px rgb(31 29 25 / 18%);
   animation: ${fadeIn} 0.15s ease-out;
 `
 
@@ -76,27 +77,35 @@ export const Field = styled.label`
   flex-direction: column;
   gap: 6px;
   font-size: 13px;
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.textMuted};
 `
 
 export const Input = styled.input`
   padding: 10px 12px;
   color: ${({ theme }) => theme.colors.text};
-  background: #a8a8a8a8;
-  border: none;
+  background: ${({ theme }) => theme.colors.field};
+  border: 1px solid transparent;
   border-radius: ${({ theme }) => theme.radii.md};
   outline: none;
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
 `
 
 export const Select = styled.select`
   padding: 10px 12px;
   color: ${({ theme }) => theme.colors.text};
-  background: #a8a8a8a8;
-  border: none;
+  background: ${({ theme }) => theme.colors.field};
+  border: 1px solid transparent;
   border-radius: ${({ theme }) => theme.radii.md};
   outline: none;
 
-  /* O menu nativo do <select> herda o fundo da página, não o do popover. */
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+
+  /* O menu nativo do <select> não herda o fundo do popover. */
   option {
     color: ${({ theme }) => theme.colors.text};
     background: ${({ theme }) => theme.colors.surface};
@@ -107,14 +116,14 @@ export const Button = styled.button`
   margin-top: 4px;
   padding: 11px 12px;
   font-weight: 600;
-  color: #fff;
-  background: #a8a8a8a8;
+  color: ${({ theme }) => theme.colors.onPrimary};
+  background: ${({ theme }) => theme.colors.primary};
   border: none;
   border-radius: ${({ theme }) => theme.radii.md};
   cursor: pointer;
 
   &:hover:not(:disabled) {
-    background: #9e9e9e;
+    background: ${({ theme }) => theme.colors.primaryHover};
   }
 
   &:disabled {
@@ -135,5 +144,5 @@ export const ErrorMessage = styled.span`
 
 export const SuccessMessage = styled.span`
   font-size: 13px;
-  color: #7ee2a8;
+  color: ${({ theme }) => theme.colors.success};
 `
