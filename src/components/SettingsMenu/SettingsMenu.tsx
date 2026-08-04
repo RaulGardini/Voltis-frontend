@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 
-import { useAuth } from '../../features/auth/useAuth'
 import {
   atualizarConfiguracao,
   obterConfiguracao,
@@ -24,8 +23,6 @@ function GearIcon() {
  * ancorado nela com as configurações do usuário (dia de fechamento e moeda).
  */
 export function SettingsMenu() {
-  const { userId } = useAuth()
-
   const [open, setOpen] = useState(false)
   const [dia, setDia] = useState('')
   const [moeda, setMoeda] = useState<string>(MOEDAS_PERMITIDAS[0])
@@ -62,7 +59,7 @@ export function SettingsMenu() {
   // Recarrega a cada abertura: o painel sempre mostra o que está no servidor,
   // mesmo que outra aba tenha alterado a configuração no meio do caminho.
   useEffect(() => {
-    if (!open || !userId) return
+    if (!open) return
 
     let cancelado = false
 
@@ -70,7 +67,7 @@ export function SettingsMenu() {
     setError('')
     setSuccess('')
 
-    obterConfiguracao(userId)
+    obterConfiguracao()
       .then((configuracao) => {
         if (cancelado) return
         setDia(String(configuracao.diaFechamentoMes))
@@ -91,11 +88,10 @@ export function SettingsMenu() {
     return () => {
       cancelado = true
     }
-  }, [open, userId])
+  }, [open])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!userId) return
 
     const diaFechamentoMes = Number(dia)
     if (!Number.isInteger(diaFechamentoMes) || diaFechamentoMes < 1 || diaFechamentoMes > 31) {
@@ -109,7 +105,7 @@ export function SettingsMenu() {
     setSaving(true)
 
     try {
-      const atualizada = await atualizarConfiguracao(userId, {
+      const atualizada = await atualizarConfiguracao({
         diaFechamentoMes,
         moeda,
       })

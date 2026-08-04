@@ -5,19 +5,18 @@ import type {
 } from './settings.types'
 
 // A rota vem de [Route("api/[controller]")] em ConfiguracaoUsuarioController.
+// Sem id na URL: o servidor identifica o usuário pelo token que o `request`
+// já anexa no cabeçalho Authorization.
 const BASE = '/ConfiguracaoUsuario'
 
-/** GET /api/ConfiguracaoUsuario/{usuarioId} — 404 se o usuário não tem registro. */
-export function obterConfiguracao(
-  usuarioId: string,
-): Promise<ConfiguracaoUsuario> {
-  return get<ConfiguracaoUsuario>(`${BASE}/${usuarioId}`)
+/** GET /api/ConfiguracaoUsuario — 401 sem token, 404 se não há registro. */
+export function obterConfiguracao(): Promise<ConfiguracaoUsuario> {
+  return get<ConfiguracaoUsuario>(BASE)
 }
 
-/** PUT /api/ConfiguracaoUsuario/{usuarioId} — 400 em moeda ou dia inválidos. */
+/** PUT /api/ConfiguracaoUsuario — 400 em moeda ou dia inválidos. */
 export function atualizarConfiguracao(
-  usuarioId: string,
   payload: AtualizarConfiguracaoRequest,
 ): Promise<ConfiguracaoUsuario> {
-  return put<ConfiguracaoUsuario>(`${BASE}/${usuarioId}`, payload)
+  return put<ConfiguracaoUsuario>(BASE, payload)
 }
