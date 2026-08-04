@@ -1,7 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 
-// Extensão explícita: sem ela o resolver acha o SettingsMenu.ts (os estilos).
-import { SettingsMenu } from '../../components/SettingsMenu/SettingsMenu.tsx'
 import { useAuth } from '../../features/auth/useAuth'
 import * as S from './Home'
 
@@ -16,17 +14,21 @@ export default function Home() {
 
   return (
     <S.Container>
-      <SettingsMenu />
-
       <S.Card>
         <div>
           <S.Greeting>Olá, {user?.nome}</S.Greeting>
           <S.Email>{user?.email}</S.Email>
         </div>
 
-        <S.Button type="button" onClick={handleLogout}>
-          Sair
-        </S.Button>
+        <S.Actions>
+          <S.Button type="button" onClick={() => navigate('/contas')}>
+            Conta bancária
+          </S.Button>
+
+          <S.GhostButton type="button" onClick={handleLogout}>
+            Sair
+          </S.GhostButton>
+        </S.Actions>
       </S.Card>
     </S.Container>
   )

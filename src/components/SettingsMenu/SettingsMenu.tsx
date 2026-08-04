@@ -6,6 +6,7 @@ import {
   obterConfiguracao,
 } from '../../features/settings/settings.service'
 import { MOEDAS_PERMITIDAS } from '../../features/settings/settings.types'
+import { useDismiss } from '../../hooks/useDismiss'
 import { ApiError } from '../../services/api'
 import * as S from './SettingsMenu'
 
@@ -34,27 +35,7 @@ export function SettingsMenu() {
   const anchorRef = useRef<HTMLDivElement>(null)
 
   const close = useCallback(() => setOpen(false), [])
-
-  // Fecha ao clicar fora ou apertar Esc — comportamento esperado de popover.
-  useEffect(() => {
-    if (!open) return
-
-    function handlePointerDown(event: MouseEvent) {
-      if (!anchorRef.current?.contains(event.target as Node)) close()
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') close()
-    }
-
-    document.addEventListener('mousedown', handlePointerDown)
-    document.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [open, close])
+  useDismiss(anchorRef, close, open)
 
   // Recarrega a cada abertura: o painel sempre mostra o que está no servidor,
   // mesmo que outra aba tenha alterado a configuração no meio do caminho.

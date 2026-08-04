@@ -31,6 +31,12 @@ export const Email = styled.p`
   color: ${({ theme }) => theme.colors.textMuted};
 `
 
+export const Actions = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+
 export const Button = styled.button`
   padding: 11px 12px;
   font-weight: 600;
@@ -42,5 +48,16 @@ export const Button = styled.button`
 
   &:hover {
     background: ${({ theme }) => theme.colors.primaryHover};
+  }
+`
+
+/** Sair é ação secundária: mesmo formato, peso visual menor. */
+export const GhostButton = styled(Button)`
+  color: ${({ theme }) => theme.colors.text};
+  background: transparent;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.field};
   }
 `
