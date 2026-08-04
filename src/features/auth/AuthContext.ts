@@ -4,8 +4,6 @@ import type { LoginRequest, RegistrarRequest, User } from './auth.types'
 
 export interface AuthContextValue {
   user: User | null
-  /** Id do usuário logado (claim `sub` do token), ou null se deslogado. */
-  userId: string | null
   isAuthenticated: boolean
   signIn: (payload: LoginRequest) => Promise<void>
   signUp: (payload: RegistrarRequest) => Promise<void>

@@ -32,16 +32,6 @@ function decodePayload(token: string): JwtPayload | null {
   }
 }
 
-/**
- * Id do usuário (claim `sub`, gravado pelo TokenService).
- *
- * Serve para montar rotas como /ConfiguracaoUsuario/{id}. Vale o mesmo aviso
- * de decodePayload: quem manda é o servidor, que revalida o token na API.
- */
-export function getUserId(token: string): string | null {
-  return decodePayload(token)?.sub ?? null
-}
-
 /** Momento (ms epoch) em que o token vence, ou null se indeterminado. */
 export function getTokenExpiration(token: string): number | null {
   const exp = decodePayload(token)?.exp
