@@ -1,11 +1,12 @@
 import styled, { keyframes } from 'styled-components'
 
-/** Âncora fixa no canto superior direito: o popover se posiciona por ela. */
+/**
+ * Âncora do popover. `relative` (e não `fixed`) porque quem posiciona no canto
+ * da tela agora é a TopBar do PrivateLayout — aqui só importa que o painel
+ * saia colado na engrenagem.
+ */
 export const Anchor = styled.div`
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
+  position: relative;
 `
 
 export const GearButton = styled.button`

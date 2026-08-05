@@ -6,42 +6,77 @@ export const Container = styled.div`
   align-items: center;
   gap: 20px;
   min-height: 100%;
-  /* Topo generoso: a engrenagem é fixa no canto e não pode encavalar. */
-  padding: 84px 24px 24px;
+  /* Topo generoso: as barras fixas ocupam os dois cantos superiores. */
+  padding: 96px 24px 24px;
 `
 
-export const Painel = styled.div`
-  width: 100%;
-  max-width: 460px;
+/**
+ * Barra fixa do canto superior esquerdo, igual à da Home. Em coluna para a
+ * mensagem de erro cair logo abaixo dos controles, e não longe deles.
+ */
+export const TopBar = styled.div`
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* Não avançar sobre a barra de Sair/configurações do outro canto. */
+  max-width: min(72vw, 620px);
 `
 
-/** Linha do seletor de conta + botão editar. */
-export const Toolbar = styled.div`
+export const TopBarRow = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
 `
 
+const controleBase = `
+  height: 42px;
+  border-radius: 9px;
+  cursor: pointer;
+`
+
+export const BackButton = styled.button`
+  ${controleBase}
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  color: ${({ theme }) => theme.colors.onPrimary};
+  background: ${({ theme }) => theme.colors.primary};
+  border: none;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryHover};
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+`
+
 export const SelectorAnchor = styled.div`
   position: relative;
-  flex: 1;
-  min-width: 0;
+  width: min(44vw, 220px);
 `
 
 export const SelectorButton = styled.button`
+  ${controleBase}
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   width: 100%;
-  padding: 12px 14px;
+  padding: 0 14px;
   font-weight: 600;
   text-align: left;
   color: ${({ theme }) => theme.colors.text};
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radii.md};
-  cursor: pointer;
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.primary};
@@ -81,19 +116,21 @@ export const Dropdown = styled.ul`
   top: calc(100% + 6px);
   right: 0;
   left: 0;
-  z-index: 5;
   overflow: hidden auto;
   max-height: 260px;
   list-style: none;
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radii.md};
+  border-radius: 9px;
   box-shadow: 0 12px 30px rgb(31 29 25 / 18%);
   animation: ${fadeIn} 0.15s ease-out;
 `
 
 export const Option = styled.li`
+  overflow: hidden;
   padding: 11px 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   cursor: pointer;
 
   &:hover {
@@ -118,33 +155,14 @@ export const NovaContaOption = styled.li`
   }
 `
 
-export const Input = styled.input`
-  width: 100%;
-  padding: 12px 14px;
-  color: ${({ theme }) => theme.colors.text};
-  background: ${({ theme }) => theme.colors.field};
-  border: 1px solid transparent;
-  border-radius: ${({ theme }) => theme.radii.md};
-  outline: none;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.textMuted};
-  }
-
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.primary};
-  }
-`
-
 export const Button = styled.button`
+  ${controleBase}
   flex-shrink: 0;
-  padding: 12px 16px;
+  padding: 0 18px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.onPrimary};
   background: ${({ theme }) => theme.colors.primary};
   border: none;
-  border-radius: ${({ theme }) => theme.radii.md};
-  cursor: pointer;
 
   &:hover:not(:disabled) {
     background: ${({ theme }) => theme.colors.primaryHover};
@@ -158,12 +176,43 @@ export const Button = styled.button`
 
 export const GhostButton = styled(Button)`
   color: ${({ theme }) => theme.colors.text};
-  background: transparent;
+  background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
 
   &:hover:not(:disabled) {
     background: ${({ theme }) => theme.colors.field};
   }
+`
+
+export const Input = styled.input`
+  ${controleBase}
+  width: min(44vw, 220px);
+  padding: 0 14px;
+  color: ${({ theme }) => theme.colors.text};
+  background: ${({ theme }) => theme.colors.field};
+  border: 1px solid transparent;
+  cursor: text;
+  outline: none;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.textMuted};
+  }
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+`
+
+/** Formulário dentro da barra fixa: largura pelo conteúdo, não 100%. */
+export const BarForm = styled.form`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`
+
+export const Painel = styled.div`
+  width: 100%;
+  max-width: 460px;
 `
 
 export const Card = styled.div`
@@ -193,10 +242,16 @@ export const EmptyState = styled(Card)`
   text-align: center;
 `
 
+/** Formulário de criação no corpo da tela (estado vazio). */
 export const Form = styled.form`
   display: flex;
   gap: 10px;
   width: 100%;
+`
+
+export const FormInput = styled(Input)`
+  width: auto;
+  flex: 1;
 `
 
 export const Message = styled.p`
@@ -205,7 +260,6 @@ export const Message = styled.p`
 `
 
 export const ErrorMessage = styled.p`
-  margin-top: 10px;
   font-size: 13px;
   color: ${({ theme }) => theme.colors.danger};
 `

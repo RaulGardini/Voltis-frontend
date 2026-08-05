@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEvent, ReactNode } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 
 import {
@@ -18,6 +18,38 @@ function ChevronIcon() {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <path d="m6 9 6 6 6-6" />
     </svg>
+  )
+}
+
+function ArrowLeftIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M19 12H5" />
+      <path d="m12 19-7-7 7-7" />
+    </svg>
+  )
+}
+
+/** Barra fixa do canto superior esquerdo, presente em todos os estados da tela. */
+function TopBar({ children, erro }: { children?: ReactNode; erro?: string }) {
+  const navigate = useNavigate()
+
+  return (
+    <S.TopBar>
+      <S.TopBarRow>
+        <S.BackButton
+          type="button"
+          aria-label="Voltar para a home"
+          onClick={() => navigate('/')}
+        >
+          <ArrowLeftIcon />
+        </S.BackButton>
+
+        {children}
+      </S.TopBarRow>
+
+      {erro && <S.ErrorMessage role="alert">{erro}</S.ErrorMessage>}
+    </S.TopBar>
   )
 }
 
@@ -155,68 +187,77 @@ export default function Accounts() {
 
   if (erroCarregamento) {
     return (
-      <S.Container>
-        <S.Painel>
-          <S.Card>
-            <S.CardTitulo>Contas bancárias</S.CardTitulo>
-            <S.ErrorMessage role="alert">{erroCarregamento}</S.ErrorMessage>
-          </S.Card>
-        </S.Painel>
-      </S.Container>
+      <>
+        <TopBar />
+        <S.Container>
+          <S.Painel>
+            <S.Card>
+              <S.CardTitulo>Contas bancárias</S.CardTitulo>
+              <S.CardDetalhe>{erroCarregamento}</S.CardDetalhe>
+            </S.Card>
+          </S.Painel>
+        </S.Container>
+      </>
     )
   }
 
   if (contas === null) {
     return (
-      <S.Container>
-        <S.Painel>
-          <S.Message>Carregando...</S.Message>
-        </S.Painel>
-      </S.Container>
+      <>
+        <TopBar />
+        <S.Container>
+          <S.Painel>
+            <S.Message>Carregando...</S.Message>
+          </S.Painel>
+        </S.Container>
+      </>
     )
   }
 
   // Nenhuma conta ainda: só o caminho de criação faz sentido aqui.
   if (contas.length === 0) {
     return (
-      <S.Container>
-        <S.Painel>
-          <S.EmptyState>
-            <div>
-              <S.CardTitulo>Nenhuma conta bancária</S.CardTitulo>
-              <S.CardDetalhe>
-                Crie sua primeira conta para começar a organizar suas
-                movimentações.
-              </S.CardDetalhe>
-            </div>
+      <>
+        <TopBar />
+        <S.Container>
+          <S.Painel>
+            <S.EmptyState>
+              <div>
+                <S.CardTitulo>Nenhuma conta bancária</S.CardTitulo>
+                <S.CardDetalhe>
+                  Crie sua primeira conta para começar a organizar suas
+                  movimentações.
+                </S.CardDetalhe>
+              </div>
 
-            {criando ? (
-              <S.Form onSubmit={handleCriar} noValidate>
-                <S.Input
-                  name="nome"
-                  placeholder="Ex.: Nubank"
-                  maxLength={CONTA_NOME_TAMANHO_MAXIMO}
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  autoFocus
-                  required
-                />
-                <S.Button type="submit" disabled={salvando}>
-                  {salvando ? 'Criando...' : 'Criar'}
+              {criando ? (
+                <S.Form onSubmit={handleCriar} noValidate>
+                  <S.FormInput
+                    name="nome"
+                    placeholder="Ex.: Nubank"
+                    maxLength={CONTA_NOME_TAMANHO_MAXIMO}
+                    value={nome}
+                    onChange={(e) => setNome(e.target.value)}
+                    autoFocus
+                    required
+                  />
+                  <S.Button type="submit" disabled={salvando}>
+                    {salvando ? 'Criando...' : 'Criar'}
+                  </S.Button>
+                </S.Form>
+              ) : (
+                <S.Button type="button" onClick={abrirCriacao}>
+                  Criar conta
                 </S.Button>
-              </S.Form>
-            ) : (
-              <S.Button type="button" onClick={abrirCriacao}>
-                Criar conta
-              </S.Button>
-            )}
+              )}
 
-            {erroFormulario && (
-              <S.ErrorMessage role="alert">{erroFormulario}</S.ErrorMessage>
-            )}
-          </S.EmptyState>
-        </S.Painel>
-      </S.Container>
+              {erroFormulario && (
+                <S.ErrorMessage role="alert">{erroFormulario}</S.ErrorMessage>
+              )}
+            </S.EmptyState>
+          </S.Painel>
+        </S.Container>
+      </>
     )
   }
 
@@ -229,32 +270,40 @@ export default function Accounts() {
   // URL com id que não é do usuário (ou não existe mais).
   if (!contaAtual) {
     return (
-      <S.Container>
-        <S.Painel>
-          <S.Card>
-            <S.CardTitulo>Conta não encontrada</S.CardTitulo>
-            <S.CardDetalhe>
-              Essa conta não existe ou não pertence a você.
-            </S.CardDetalhe>
-            <S.CardDetalhe>
-              <S.GhostButton
-                type="button"
-                onClick={() => navigate(`/contas/${contas[0].contaId}`, { replace: true })}
-              >
-                Abrir minha primeira conta
-              </S.GhostButton>
-            </S.CardDetalhe>
-          </S.Card>
-        </S.Painel>
-      </S.Container>
+      <>
+        <TopBar />
+        <S.Container>
+          <S.Painel>
+            <S.Card>
+              <S.CardTitulo>Conta não encontrada</S.CardTitulo>
+              <S.CardDetalhe>
+                Essa conta não existe ou não pertence a você.
+              </S.CardDetalhe>
+              <S.CardDetalhe>
+                <S.GhostButton
+                  type="button"
+                  onClick={() =>
+                    navigate(`/contas/${contas[0].contaId}`, { replace: true })
+                  }
+                >
+                  Abrir minha primeira conta
+                </S.GhostButton>
+              </S.CardDetalhe>
+            </S.Card>
+          </S.Painel>
+        </S.Container>
+      </>
     )
   }
 
   return (
-    <S.Container>
-      <S.Painel>
+    <>
+      <TopBar erro={erroFormulario}>
         {criando || editando ? (
-          <S.Form onSubmit={criando ? handleCriar : handleRenomear} noValidate>
+          <S.BarForm
+            onSubmit={criando ? handleCriar : handleRenomear}
+            noValidate
+          >
             <S.Input
               name="nome"
               placeholder="Ex.: Nubank"
@@ -274,9 +323,9 @@ export default function Accounts() {
             >
               Cancelar
             </S.GhostButton>
-          </S.Form>
+          </S.BarForm>
         ) : (
-          <S.Toolbar>
+          <>
             <S.SelectorAnchor ref={seletorRef}>
               <S.SelectorButton
                 type="button"
@@ -314,22 +363,20 @@ export default function Accounts() {
             <S.Button type="button" onClick={abrirEdicao}>
               Editar
             </S.Button>
-          </S.Toolbar>
+          </>
         )}
+      </TopBar>
 
-        {erroFormulario && (
-          <S.ErrorMessage role="alert">{erroFormulario}</S.ErrorMessage>
-        )}
-      </S.Painel>
-
-      <S.Painel>
-        <S.Card>
-          <S.CardTitulo>{contaAtual.nome}</S.CardTitulo>
-          <S.CardDetalhe>
-            Criada em {formatarData(contaAtual.criadoEm)}
-          </S.CardDetalhe>
-        </S.Card>
-      </S.Painel>
-    </S.Container>
+      <S.Container>
+        <S.Painel>
+          <S.Card>
+            <S.CardTitulo>{contaAtual.nome}</S.CardTitulo>
+            <S.CardDetalhe>
+              Criada em {formatarData(contaAtual.criadoEm)}
+            </S.CardDetalhe>
+          </S.Card>
+        </S.Painel>
+      </S.Container>
+    </>
   )
 }
