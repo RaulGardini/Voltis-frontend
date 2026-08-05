@@ -1,63 +1,36 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
+  min-height: 100%;
+`
+
+/**
+ * Barra fixa do canto superior esquerdo, espelhando a da direita: o botão e a
+ * saudação num flex com gap, em vez de posicionados um a um. Assim mudar o
+ * texto do botão não desloca a saudação para cima do que vier depois.
+ */
+export const TopBar = styled.div`
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 100%;
-  padding: 24px;
+  gap: 16px;
 `
 
-export const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 100%;
-  max-width: 400px;
-  padding: 32px 15px;
-  text-align: center;
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: 1.5rem;
-`
-
-export const Greeting = styled.h1`
-  font-size: 20px;
-  font-weight: 600;
-`
-
-export const Email = styled.p`
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.textMuted};
-`
-
-export const Actions = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`
-
-export const Button = styled.button`
-  padding: 11px 12px;
+export const AccountButton = styled.button`
+  flex-shrink: 0;
+  height: 42px;
+  padding: 0 18px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.onPrimary};
   background: ${({ theme }) => theme.colors.primary};
   border: none;
-  border-radius: ${({ theme }) => theme.radii.md};
+  border-radius: 9px;
   cursor: pointer;
 
   &:hover {
     background: ${({ theme }) => theme.colors.primaryHover};
-  }
-`
-
-/** Sair é ação secundária: mesmo formato, peso visual menor. */
-export const GhostButton = styled(Button)`
-  color: ${({ theme }) => theme.colors.text};
-  background: transparent;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.field};
   }
 `
