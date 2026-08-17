@@ -9,6 +9,7 @@ import {
 } from '../../features/accounts/accounts.service'
 import type { Conta } from '../../features/accounts/accounts.types'
 import { CONTA_NOME_TAMANHO_MAXIMO } from '../../features/accounts/accounts.types'
+import { MovementsPanel } from '../../components/MovementsPanel/MovementsPanel.tsx'
 import { useDismiss } from '../../hooks/useDismiss'
 import { ApiError } from '../../services/api'
 import * as S from './Accounts'
@@ -55,11 +56,6 @@ function TopBar({ children, erro }: { children?: ReactNode; erro?: string }) {
 
 function mensagemDeErro(err: unknown, fallback: string): string {
   return err instanceof ApiError ? err.message : fallback
-}
-
-function formatarData(iso: string): string {
-  const data = new Date(iso)
-  return Number.isNaN(data.getTime()) ? '—' : data.toLocaleDateString('pt-BR')
 }
 
 export default function Accounts() {
@@ -368,14 +364,9 @@ export default function Accounts() {
       </TopBar>
 
       <S.Container>
-        <S.Painel>
-          <S.Card>
-            <S.CardTitulo>{contaAtual.nome}</S.CardTitulo>
-            <S.CardDetalhe>
-              Criada em {formatarData(contaAtual.criadoEm)}
-            </S.CardDetalhe>
-          </S.Card>
-        </S.Painel>
+        {/* key: trocar de conta remonta o painel, zerando o resumo da anterior
+            em vez de mostrar os números antigos enquanto carrega. */}
+        <MovementsPanel key={contaAtual.contaId} contaId={contaAtual.contaId} />
       </S.Container>
     </>
   )
